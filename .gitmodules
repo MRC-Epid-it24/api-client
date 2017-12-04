@@ -1,0 +1,4 @@
+[submodule "api-shared"]
+	path = api-shared
+	url = git@github.com:intake24/api-shared.git
+	branch = master
