@@ -27,6 +27,7 @@ lazy val apiClient = crossProject.in(file(".")).settings(
   scalaVersion := "2.12.4",
 
   libraryDependencies ++= Seq(
+    "uk.ac.ncl.openlab.intake24" %%% "api-shared" % "1.0.0-SNAPSHOT",
     "fr.hmil" %%% "roshttp" % "2.0.2",
     "io.circe" %%% "circe-core" % "0.8.0",
     "io.circe" %%% "circe-generic" % "0.8.0",
