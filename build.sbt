@@ -17,13 +17,12 @@ limitations under the License.
 */
 
 import org.scalajs.jsenv.nodejs.NodeJSEnv
-import sbt.Keys.version
 
 lazy val apiClient = crossProject.in(file(".")).settings(
   name := "api-client",
   version := "1.0.0-SNAPSHOT",
   organization := "uk.ac.ncl.openlab.intake24",
-  description := "Intake24 cross-platform API client types",
+  description := "Intake24 cross-platform API client",
   scalaVersion := "2.12.4",
 
   libraryDependencies ++= Seq(
@@ -49,8 +48,7 @@ lazy val apiClient = crossProject.in(file(".")).settings(
       "INTAKE24_API_TEST_URL" -> "http://localhost:9001",
       "INTAKE24_API_TEST_USER" -> "intake-test@di-test.com",
       "INTAKE24_API_TEST_PASSWORD" -> "BlahBlah123"
-    ))),
-  traceLevel.in(Test) := 0
+    )))
 )
 
 lazy val apiClientJVM = apiClient.jvm
