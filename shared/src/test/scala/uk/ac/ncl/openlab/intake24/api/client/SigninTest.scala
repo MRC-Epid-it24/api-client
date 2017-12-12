@@ -1,7 +1,7 @@
 package uk.ac.ncl.openlab.intake24.api.client
 
 import uk.ac.ncl.openlab.intake24.api.client.roshttp.common.SigninImpl
-import uk.ac.ncl.openlab.intake24.api.shared.EmailCredentials
+import uk.ac.ncl.openlab.intake24.api.data.EmailCredentials
 import cats._
 import cats.data._
 import cats.implicits._

@@ -1,6 +1,6 @@
 package uk.ac.ncl.openlab.intake24.api.client
 
-import uk.ac.ncl.openlab.intake24.api.shared.ErrorDescription
+import uk.ac.ncl.openlab.intake24.api.data.ErrorDescription
 
 sealed trait ApiError
 

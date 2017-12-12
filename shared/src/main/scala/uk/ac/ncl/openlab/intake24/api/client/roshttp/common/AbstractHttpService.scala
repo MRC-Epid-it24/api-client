@@ -3,6 +3,7 @@ package uk.ac.ncl.openlab.intake24.api.client.roshttp.common
 import java.io.IOException
 import java.nio.ByteBuffer
 
+import fr.hmil.roshttp.{HttpRequest, Method}
 import fr.hmil.roshttp.body.BulkBodyPart
 import fr.hmil.roshttp.exceptions.HttpException
 import fr.hmil.roshttp.response.SimpleHttpResponse
@@ -10,10 +11,9 @@ import io.circe.generic.auto._
 import io.circe.{Decoder, Encoder}
 import uk.ac.ncl.openlab.intake24.api.client.ApiError.NetworkError
 import uk.ac.ncl.openlab.intake24.api.client.{ApiError, JsonCodecs}
-import uk.ac.ncl.openlab.intake24.api.shared.ErrorDescription
+import uk.ac.ncl.openlab.intake24.api.data.ErrorDescription
 
 import scala.concurrent.Future
-
 import monix.execution.Scheduler.Implicits.global
 
 class EncodedJsonBody(json: String) extends BulkBodyPart {
@@ -28,11 +28,41 @@ trait HttpServiceUtils extends JsonCodecs {
 
   lazy val apiBaseUrlNoSlash = apiBaseUrl.replaceAll("/+$", "")
 
-  protected def getUrl(endpoint: String): String = apiBaseUrlNoSlash + "/" + endpoint.replaceAll("^/", "")
+  private def getUrl(endpoint: String) = apiBaseUrlNoSlash + "/" + endpoint.replaceAll("^/", "")
+
+  protected def request(endpoint: String): HttpRequest =
+    HttpRequest(getUrl(endpoint))
+
+  protected def authRequest(endpoint: String, accessToken: String): HttpRequest =
+    HttpRequest(getUrl(endpoint))
+      .withHeader("X-Auth-Token", accessToken)
+
+  protected def authRequestWithResponse[T](method: Method, endpoint: String, authToken: String)(implicit decoder: Decoder[T]): Future[Either[ApiError, T]] =
+    authRequest(endpoint, authToken)
+      .withMethod(method)
+      .send()
+      .map(decodeResponseBody[T])
+      .recoverWith(recoverRequest)
+
+  protected def authRequestWithBodyAndResponse[ReqT, RespT](method: Method, endpoint: String, authToken: String, body: ReqT)(implicit decoder: Decoder[RespT], encoder: Encoder[ReqT]): Future[Either[ApiError, RespT]] =
+    authRequest(endpoint, authToken)
+      .withMethod(method)
+      .withBody(encodeBody(body))
+      .send()
+      .map(decodeResponseBody[RespT])
+      .recoverWith(recoverRequest)
+
+  protected def authRequestWithBody[ReqT](method: Method, endpoint: String, authToken: String, body: ReqT)(implicit encoder: Encoder[ReqT]): Future[Either[ApiError, Unit]] =
+    authRequest(endpoint, authToken)
+      .withMethod(method)
+      .withBody(encodeBody(body))
+      .send()
+      .map(_ => Right(()))
+      .recoverWith(recoverRequest)
 
   protected def encodeBody[T](body: T)(implicit encoder: Encoder[T]): EncodedJsonBody = new EncodedJsonBody(toJson(body))
 
-  protected def recover[T]: PartialFunction[Throwable, Future[Either[ApiError, T]]] = {
+  protected def recoverRequest[T]: PartialFunction[Throwable, Future[Either[ApiError, T]]] = {
     case HttpException(e: SimpleHttpResponse) =>
       Future {
         decodeError(e)

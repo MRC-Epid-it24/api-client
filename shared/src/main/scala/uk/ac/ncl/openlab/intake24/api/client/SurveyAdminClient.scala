@@ -1,6 +1,6 @@
 package uk.ac.ncl.openlab.intake24.api.client
 
-import uk.ac.ncl.openlab.intake24.api.shared.CreateSurveyRequest
+import uk.ac.ncl.openlab.intake24.api.data.CreateSurveyRequest
 
 
 trait SurveyAdminClient {

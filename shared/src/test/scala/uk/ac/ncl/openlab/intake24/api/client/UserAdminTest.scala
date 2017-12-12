@@ -2,7 +2,7 @@ package uk.ac.ncl.openlab.intake24.api.client
 
 import org.scalatest.BeforeAndAfterAll
 //import uk.ac.ncl.openlab.uk.ac.ncl.openlab.intake24.api.client.api.client.test.api.client.scalajhttp.{SurveyAdminClientImpl, UserAdminClientImpl}
-import uk.ac.ncl.openlab.intake24.api.shared._
+import uk.ac.ncl.openlab.intake24.api.data._
 
 import scala.util.Random
 

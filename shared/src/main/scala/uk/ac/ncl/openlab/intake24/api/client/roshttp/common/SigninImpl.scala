@@ -4,31 +4,26 @@ import fr.hmil.roshttp.{HttpRequest, Method}
 import io.circe.generic.auto._
 import monix.execution.Scheduler.Implicits.global
 import uk.ac.ncl.openlab.intake24.api.client.ApiError
-import uk.ac.ncl.openlab.intake24.api.client.services.common.Signin
-import uk.ac.ncl.openlab.intake24.api.shared.{EmailCredentials, RefreshResult, SigninResult, SurveyAliasCredentials}
+import uk.ac.ncl.openlab.intake24.api.client.services.common.AuthService
+import uk.ac.ncl.openlab.intake24.api.data.{EmailCredentials, RefreshResult, SigninResult, SurveyAliasCredentials}
 
 import scala.concurrent.Future
 
-class SigninImpl(val apiBaseUrl: String) extends Signin with HttpServiceUtils {
+class SigninImpl(val apiBaseUrl: String) extends AuthService with HttpServiceUtils {
 
   def signin(credentials: EmailCredentials): Future[Either[ApiError, SigninResult]] = {
-    HttpRequest(getUrl("/signin"))
+    request("/signin")
       .post(encodeBody(credentials))
       .map(decodeResponseBody[SigninResult])
-      .recoverWith(recover)
+      .recoverWith(recoverRequest)
   }
 
   def signinWithAlias(credentials: SurveyAliasCredentials): Future[Either[ApiError, SigninResult]] =
-    HttpRequest(getUrl("/signin/alias"))
+    request("/signin/alias")
       .post(encodeBody(credentials))
       .map(decodeResponseBody[SigninResult])
-      .recoverWith(recover)
+      .recoverWith(recoverRequest)
 
   def refresh(refreshToken: String): Future[Either[ApiError, RefreshResult]] =
-    HttpRequest(getUrl("/refresh"))
-      .withHeader("X-Auth-Token", refreshToken)
-      .withMethod(Method.POST)
-      .send()
-      .map(decodeResponseBody[RefreshResult])
-      .recoverWith(recover)
+    authRequestWithResponse[RefreshResult](Method.POST, "/refresh", refreshToken)
 }

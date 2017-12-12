@@ -37,9 +37,7 @@ lazy val apiClient = crossProject.in(file(".")).settings(
 ).jvmSettings(
   libraryDependencies ++= Seq(
     "org.slf4j" % "slf4j-api" % "1.7.25",
-    "org.rogach" %% "scallop" % "2.0.5",
-    "commons-io" % "commons-io" % "2.5",
-    "com.opencsv" % "opencsv" % "3.9"
+    "org.rogach" %% "scallop" % "2.0.5"
   )
 ).jsSettings(
   jsEnv := new NodeJSEnv(NodeJSEnv.Config()

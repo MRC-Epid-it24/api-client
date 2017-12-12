@@ -14,7 +14,7 @@ package uk.ac.ncl.openlab.intake24.api.client
 import uk.ac.ncl.openlab.intake24.PlatformUtils
 import org.scalatest.{Assertion, AsyncFunSuite}
 import uk.ac.ncl.openlab.intake24.api.client.ApiError.{HttpError, NetworkError, ResultParseFailed}
-import uk.ac.ncl.openlab.intake24.api.shared.ErrorDescription
+import uk.ac.ncl.openlab.intake24.api.data.ErrorDescription
 
 import scala.concurrent.Future
 
