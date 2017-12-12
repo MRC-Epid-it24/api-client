@@ -1,7 +1,7 @@
 package uk.ac.ncl.openlab.intake24.api.client.services.common
 
 import uk.ac.ncl.openlab.intake24.api.client.ApiError
-import uk.ac.ncl.openlab.intake24.api.shared.{EmailCredentials, RefreshResult, SigninResult, SurveyAliasCredentials}
+import uk.ac.ncl.openlab.intake24.api.data.{EmailCredentials, RefreshResult, SigninResult, SurveyAliasCredentials}
 
 import scala.concurrent.Future
 
