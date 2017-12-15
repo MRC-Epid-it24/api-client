@@ -70,7 +70,7 @@ trait JsonCodecs {
     }
   }
 
-  def fromJson[T](json: String)(implicit decoder: Decoder[T]) = decode[T](json)
+  def fromJson[T](json: String)(implicit decoder: Decoder[T]): Either[Error, T] = decode[T](json)
 
-  def toJson[T](value: T)(implicit encoder: Encoder[T]) = value.asJson.noSpaces
+  def toJson[T](value: T)(implicit encoder: Encoder[T]): String = value.asJson.noSpaces
 }

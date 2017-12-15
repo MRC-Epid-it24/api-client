@@ -10,18 +10,19 @@ import uk.ac.ncl.openlab.intake24.api.data.{EmailCredentials, RefreshResult, Sig
 
 import scala.concurrent.Future
 
-class SigninImpl(requestHandler: RequestHandler) extends AuthService with HttpServiceUtils {
+class SigninImpl(override protected val apiBaseUrl: String) extends AuthService with HttpServiceUtils {
 
   def signin(credentials: EmailCredentials): Future[Either[ApiError, SigninResult]] = {
-    request("/signin")
-      .post(encodeBody(credentials))
+
+    requestWithBody(Method.POST, "/signin", credentials)
+      .send()
       .map(decodeResponseBody[SigninResult])
       .recoverWith(recoverRequest)
   }
 
   def signinWithAlias(credentials: SurveyAliasCredentials): Future[Either[ApiError, SigninResult]] =
-    request("/signin/alias")
-      .post(encodeBody(credentials))
+    requestWithBody(Method.POST, "/signin/alias", credentials)
+      .send()
       .map(decodeResponseBody[SigninResult])
       .recoverWith(recoverRequest)
 

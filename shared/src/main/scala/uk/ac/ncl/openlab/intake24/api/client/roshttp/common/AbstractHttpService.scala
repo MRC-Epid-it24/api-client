@@ -24,14 +24,14 @@ class EncodedJsonBody(json: String) extends BulkBodyPart {
 
 trait HttpServiceUtils extends JsonCodecs {
 
-  //protected val apiBaseUrl: String
+  protected val apiBaseUrl: String
 
-  //lazy val apiBaseUrlNoSlash = apiBaseUrl.replaceAll("/+$", "")
+  lazy val apiBaseUrlNoSlash = apiBaseUrl.replaceAll("/+$", "")
 
-  //private def getUrl(endpoint: String) = apiBaseUrlNoSlash + "/" + endpoint.replaceAll("^/", "")
+  private def getUrl(endpoint: String) = apiBaseUrlNoSlash + "/" + endpoint.replaceAll("^/", "")
 
   protected def request(method: Method, endpoint: String, queryParameters: Seq[(String, String)] = Seq()): HttpRequest =
-    HttpRequest(endpoint)
+    HttpRequest(getUrl(endpoint))
       .withQueryParameters(queryParameters: _*)
       .withMethod(method)
 
@@ -40,7 +40,7 @@ trait HttpServiceUtils extends JsonCodecs {
 
   protected def authRequest(endpoint: String, accessToken: String): HttpRequest =
     HttpRequest(getUrl(endpoint))
-      .withHeader("X-Auth-Token", accessToken)
+      //.withHeader("X-Auth-Token", accessToken)
 
   protected def authRequestWithResponse[T](method: Method, endpoint: String, authToken: String, queryParameters: Seq[(String, String)] = Seq())(implicit decoder: Decoder[T]): Future[Either[ApiError, T]] =
     authRequest(endpoint, authToken)
