@@ -24,14 +24,8 @@ class EncodedJsonBody(json: String) extends BulkBodyPart {
 
 trait HttpServiceUtils extends JsonCodecs {
 
-  protected val apiBaseUrl: String
-
-  lazy val apiBaseUrlNoSlash = apiBaseUrl.replaceAll("/+$", "")
-
-  private def getUrl(endpoint: String) = apiBaseUrlNoSlash + "/" + endpoint.replaceAll("^/", "")
-
   protected def request(method: Method, endpoint: String, queryParameters: Seq[(String, String)] = Seq()): HttpRequest =
-    HttpRequest(getUrl(endpoint))
+    HttpRequest(endpoint)
       .withQueryParameters(queryParameters: _*)
       .withMethod(method)
 
@@ -39,16 +33,13 @@ trait HttpServiceUtils extends JsonCodecs {
     request(method, endpoint, queryParameters).withBody(encodeBody(body))
 
   protected def authRequest(endpoint: String, accessToken: String): HttpRequest =
-    HttpRequest(getUrl(endpoint))
-      //.withHeader("X-Auth-Token", accessToken)
+    HttpRequest(endpoint)
 
-  protected def authRequestWithResponse[T](method: Method, endpoint: String, authToken: String, queryParameters: Seq[(String, String)] = Seq())(implicit decoder: Decoder[T]): Future[Either[ApiError, T]] =
+  //.withHeader("X-Auth-Token", accessToken)
+
+  protected def authRequestWithResponse[T](method: Method, endpoint: String, authToken: String, queryParameters: Seq[(String, String)] = Seq())(implicit decoder: Decoder[T]): HttpRequest =
     authRequest(endpoint, authToken)
       .withMethod(method)
-
-      .send()
-      .map(decodeResponseBody[T])
-      .recoverWith(recoverRequest)
 
   protected def authRequestWithBodyAndResponse[ReqT, RespT](method: Method, endpoint: String, authToken: String, body: ReqT, queryParameters: Seq[(String, String)] = Seq())(implicit decoder: Decoder[RespT], encoder: Encoder[ReqT]): Future[Either[ApiError, RespT]] =
     authRequest(endpoint, authToken)
