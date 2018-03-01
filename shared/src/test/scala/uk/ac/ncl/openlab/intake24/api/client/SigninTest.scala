@@ -10,7 +10,7 @@ import scala.concurrent.Future
 
 class SigninTest extends ApiTestSuite {
 
-  val service = new SigninImpl(apiBaseUrl)
+  val service = new SigninImpl(null)
 
   test("Sign in with bad e-mail") {
     service.signin(EmailCredentials("hfkdhfkjsdhfkjds", "fhdlskfhkljewhfljw")).map(assertHttpError(_, 401))
