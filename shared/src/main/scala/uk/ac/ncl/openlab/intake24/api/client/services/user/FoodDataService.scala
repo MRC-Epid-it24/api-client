@@ -8,7 +8,7 @@ import scala.concurrent.Future
 trait FoodDataService {
 
   def lookup(locale: String, description: String, existing: Seq[String] = Seq(),
-             limit: Option[Int] = None, algorithm: Option[String] = None): Future[Either[ApiError, LookupResult]]
+             limit: Option[Int] = None, algorithm: Option[String] = Some("paRules")): Future[Either[ApiError, LookupResult]]
 
   def getFoodData(locale: String, code: String): Future[Either[ApiError, FoodDataForSurvey]]
 }
